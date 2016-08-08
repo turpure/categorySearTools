@@ -98,7 +98,7 @@ def find_advanced(key_words, page, owner):
     try:
         items = response.reply.searchResult.item
         for item in items:
-            input_single(item.itemId,item.listingInfo.startTime,owner)
+            input_single(item.itemId,item.listingInfo.startTime,key_words,owner)
     except Exception as e:
         print e
 
@@ -140,15 +140,15 @@ def input_item(item_list,owner):
         print e
 
 
-def input_single(item,starttime,owner):
+def input_single(item,starttime,kw,owner):
 	try:
 		con = MySQLdb.Connection(host='192.168.0.134', user='root', passwd='', db='ebaydata')
 		cur = con.cursor()
 		check_query = "select * from " + owner + "_category_items where itemid=%s"
 		if item:
 			if not cur.execute(check_query,(item,)):
-				query = "insert into " + owner + "_category_items values (%s,%s,now())"
-				cur.execute(query,(item,starttime))
+				query = "insert into " + owner + "_category_items values (%s,%s,now(),%s)"
+				cur.execute(query,(item,starttime,kw,))
 				con.commit()
 				print "%s：get item %s" % (datetime.datetime.now(), item)
 			else: print "%s already exists in the %s_category_items" % (item,owner)
@@ -201,4 +201,4 @@ def muti(owner):
 
 
 if __name__ == '__main__':
-	muti('chy')
+	muti('sxz')
